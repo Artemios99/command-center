@@ -1,6 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import ClockHeader from "../../components/ClockHeader";
 import CounterWidget from "../../components/CounterWidget";
 import LoginScreen from "../../components/LoginScreen";
@@ -32,13 +37,15 @@ export default function CommandCenter() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.glow} />
-      <ClockHeader />
-      <WeatherWidget />
-      <NoteWidget token={token} />
-      <CounterWidget token={token} />
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.glow} />
+        <ClockHeader />
+        <WeatherWidget />
+        <NoteWidget token={token} />
+        <CounterWidget token={token} />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
