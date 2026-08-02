@@ -19,11 +19,14 @@ export default function LoginScreen({
   const handleLogin = async () => {
     setError("");
     try {
-      const res = await fetch("http://192.168.10.61:3000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const res = await fetch(
+        "https://command-center-backend-dvol.onrender.com/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        },
+      );
 
       const data = await res.json();
 

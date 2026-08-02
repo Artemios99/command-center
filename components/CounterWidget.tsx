@@ -2,7 +2,7 @@ import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const API_URL = "http://192.168.10.61:3000";
+const API_URL = "https://command-center-backend-dvol.onrender.com";
 
 export default function CounterWidget({ token }: { token: string }) {
   const [count, setCount] = useState(0);
