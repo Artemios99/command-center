@@ -2,12 +2,14 @@ import { StyleSheet, View } from "react-native";
 import ClockHeader from "../../components/ClockHeader";
 import CounterWidget from "../../components/CounterWidget";
 import NoteWidget from "../../components/NoteWidget";
+import WeatherWidget from "../../components/WeatherWidget";
 
 export default function CommandCenter() {
   return (
     <View style={styles.container}>
       <View style={styles.glow} />
       <ClockHeader />
+      <WeatherWidget />
       <NoteWidget />
       <CounterWidget />
     </View>
