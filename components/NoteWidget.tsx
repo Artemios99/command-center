@@ -1,9 +1,31 @@
 import { BlurView } from "expo-blur";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput } from "react-native";
 
-export default function NoteWidget() {
+const API_URL = "http://192.168.10.61:3000";
+
+export default function NoteWidget({ token }: { token: string }) {
   const [note, setNote] = useState("");
+
+  useEffect(() => {
+    fetch(`${API_URL}/notes`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setNote(data.content || ""));
+  }, []);
+
+  const saveNote = (text: string) => {
+    setNote(text);
+    fetch(`${API_URL}/notes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content: text }),
+    });
+  };
 
   return (
     <BlurView intensity={40} tint="dark" style={styles.card}>
@@ -13,7 +35,7 @@ export default function NoteWidget() {
         placeholder="Γράψε κάτι..."
         placeholderTextColor="#6B7280"
         value={note}
-        onChangeText={setNote}
+        onChangeText={saveNote}
         multiline
       />
     </BlurView>

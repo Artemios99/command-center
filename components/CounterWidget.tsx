@@ -1,9 +1,31 @@
 import { BlurView } from "expo-blur";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function CounterWidget() {
+const API_URL = "http://192.168.10.61:3000";
+
+export default function CounterWidget({ token }: { token: string }) {
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    fetch(`${API_URL}/habits/coffee`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setCount(data.count || 0));
+  }, []);
+
+  const updateCount = (newCount: number) => {
+    setCount(newCount);
+    fetch(`${API_URL}/habits/coffee`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ count: newCount }),
+    });
+  };
 
   return (
     <BlurView
@@ -19,13 +41,13 @@ export default function CounterWidget() {
       <View style={styles.counterButtons}>
         <TouchableOpacity
           style={styles.counterButton}
-          onPress={() => setCount(Math.max(0, count - 1))}
+          onPress={() => updateCount(Math.max(0, count - 1))}
         >
           <Text style={styles.counterButtonText}>−</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.counterButton, styles.counterButtonPrimary]}
-          onPress={() => setCount(count + 1)}
+          onPress={() => updateCount(count + 1)}
         >
           <Text style={styles.counterButtonText}>+</Text>
         </TouchableOpacity>
