@@ -9,16 +9,28 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
 import {
   Animated,
+  Dimensions,
   Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import ClockHeader from "../../components/ClockHeader";
 import CounterWidget from "../../components/CounterWidget";
 import LoginScreen from "../../components/LoginScreen";
 import NoteWidget from "../../components/NoteWidget";
 import WeatherWidget from "../../components/WeatherWidget";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+function getGlowColor() {
+  const hour = new Date().getHours();
+  if (hour < 6) return "#4A5FE0";
+  if (hour < 12) return "#F0A868";
+  if (hour < 18) return "#7C6FE0";
+  if (hour < 22) return "#E06F9E";
+  return "#4A5FE0";
+}
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -33,10 +45,10 @@ export default function CommandCenter() {
   const [checkingStorage, setCheckingStorage] = useState(true);
   const [showGreeting, setShowGreeting] = useState(true);
 
+  const greetingTextOpacity = useRef(new Animated.Value(0)).current;
+  const stage = useRef(new Animated.Value(0)).current; // 0 = full screen, 1 = corner glow
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
-  const greetingFade = useRef(new Animated.Value(0)).current;
-  const greetingExitFade = useRef(new Animated.Value(1)).current;
 
   const [fontsLoaded] = useFonts({
     JetBrainsMono_700Bold,
@@ -54,20 +66,26 @@ export default function CommandCenter() {
 
   useEffect(() => {
     if (token && fontsLoaded && showGreeting) {
-      Animated.timing(greetingFade, {
+      Animated.timing(greetingTextOpacity, {
         toValue: 1,
         duration: 500,
         useNativeDriver: true,
       }).start();
 
       const timer = setTimeout(() => {
-        Animated.timing(greetingExitFade, {
-          toValue: 0,
-          duration: 400,
-          useNativeDriver: true,
+        Animated.timing(stage, {
+          toValue: 1,
+          duration: 700,
+          useNativeDriver: false,
         }).start(() => {
           setShowGreeting(false);
         });
+
+        Animated.timing(greetingTextOpacity, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
       }, 1600);
 
       return () => clearTimeout(timer);
@@ -75,7 +93,7 @@ export default function CommandCenter() {
   }, [token, fontsLoaded]);
 
   useEffect(() => {
-    if (token && !showGreeting) {
+    if (!showGreeting) {
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
@@ -104,24 +122,30 @@ export default function CommandCenter() {
     return <LoginScreen onLogin={handleLogin} />;
   }
 
-  if (showGreeting) {
-    return (
-      <LinearGradient
-        colors={["#0B0D14", "#14101F", "#0B0D14"]}
-        style={styles.greetingContainer}
-      >
-        <View style={styles.glow} />
-        <Animated.Text
-          style={[
-            styles.greetingText,
-            { opacity: Animated.multiply(greetingFade, greetingExitFade) },
-          ]}
-        >
-          {getGreeting()}, Artemios
-        </Animated.Text>
-      </LinearGradient>
-    );
-  }
+  const glowTop = stage.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -100],
+  });
+  const glowLeft = stage.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -80],
+  });
+  const glowWidth = stage.interpolate({
+    inputRange: [0, 1],
+    outputRange: [SCREEN_WIDTH, 300],
+  });
+  const glowHeight = stage.interpolate({
+    inputRange: [0, 1],
+    outputRange: [SCREEN_HEIGHT, 300],
+  });
+  const glowRadius = stage.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 150],
+  });
+  const glowOpacity = stage.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0.25],
+  });
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -129,15 +153,42 @@ export default function CommandCenter() {
         colors={["#0B0D14", "#14101F", "#0B0D14"]}
         style={styles.container}
       >
-        <View style={styles.glow} />
         <Animated.View
-          style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
-        >
-          <ClockHeader />
-          <WeatherWidget />
-          <NoteWidget token={token} />
-          <CounterWidget token={token} />
-        </Animated.View>
+          style={[
+            styles.glow,
+            {
+              backgroundColor: getGlowColor(),
+              top: glowTop,
+              left: glowLeft,
+              width: glowWidth,
+              height: glowHeight,
+              borderRadius: glowRadius,
+              opacity: glowOpacity,
+            },
+          ]}
+        />
+
+        {showGreeting && (
+          <Animated.Text
+            style={[styles.greetingText, { opacity: greetingTextOpacity }]}
+          >
+            {getGreeting()}, Artemios
+          </Animated.Text>
+        )}
+
+        {!showGreeting && (
+          <Animated.View
+            style={{
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            }}
+          >
+            <ClockHeader />
+            <WeatherWidget />
+            <NoteWidget token={token} />
+            <CounterWidget token={token} />
+          </Animated.View>
+        )}
       </LinearGradient>
     </TouchableWithoutFeedback>
   );
@@ -149,24 +200,17 @@ const styles = StyleSheet.create({
     paddingTop: 70,
     paddingHorizontal: 20,
   },
-  greetingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   greetingText: {
+    position: "absolute",
+    top: "45%",
+    left: 20,
+    right: 20,
+    textAlign: "center",
     color: "#FFFFFF",
     fontSize: 28,
     fontFamily: "JetBrainsMono_700Bold",
   },
   glow: {
     position: "absolute",
-    top: -100,
-    left: -80,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: "#7C6FE0",
-    opacity: 0.25,
   },
 });
