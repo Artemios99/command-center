@@ -1,12 +1,19 @@
 import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const API_URL = "https://command-center-backend-dvol.onrender.com";
 
 export default function CounterWidget({ token }: { token: string }) {
   const [count, setCount] = useState(0);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     fetch(`${API_URL}/habits/coffee`, {
@@ -16,9 +23,25 @@ export default function CounterWidget({ token }: { token: string }) {
       .then((data) => setCount(data.count || 0));
   }, []);
 
+  const animatePop = () => {
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 1.3,
+        duration: 120,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 3,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
   const updateCount = (newCount: number) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCount(newCount);
+    animatePop();
     fetch(`${API_URL}/habits/coffee`, {
       method: "POST",
       headers: {
@@ -37,7 +60,11 @@ export default function CounterWidget({ token }: { token: string }) {
     >
       <View>
         <Text style={styles.cardLabel}>ΚΑΦΕΔΕΣ ΣΗΜΕΡΑ</Text>
-        <Text style={styles.counterValue}>{count}</Text>
+        <Animated.Text
+          style={[styles.counterValue, { transform: [{ scale: scaleAnim }] }]}
+        >
+          {count}
+        </Animated.Text>
       </View>
 
       <View style={styles.counterButtons}>
