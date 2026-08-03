@@ -46,9 +46,10 @@ export default function CommandCenter() {
   const [showGreeting, setShowGreeting] = useState(true);
 
   const greetingTextOpacity = useRef(new Animated.Value(0)).current;
-  const stage = useRef(new Animated.Value(0)).current; // 0 = full screen, 1 = corner glow
+  const stage = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
+  const breathe = useRef(new Animated.Value(1)).current;
 
   const [fontsLoaded] = useFonts({
     JetBrainsMono_700Bold,
@@ -106,6 +107,21 @@ export default function CommandCenter() {
           useNativeDriver: true,
         }),
       ]).start();
+
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(breathe, {
+            toValue: 1.15,
+            duration: 2200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(breathe, {
+            toValue: 1,
+            duration: 2200,
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
     }
   }, [showGreeting]);
 
@@ -122,25 +138,9 @@ export default function CommandCenter() {
     return <LoginScreen onLogin={handleLogin} />;
   }
 
-  const glowTop = stage.interpolate({
+  const glowScale = stage.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -100],
-  });
-  const glowLeft = stage.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -80],
-  });
-  const glowWidth = stage.interpolate({
-    inputRange: [0, 1],
-    outputRange: [SCREEN_WIDTH, 300],
-  });
-  const glowHeight = stage.interpolate({
-    inputRange: [0, 1],
-    outputRange: [SCREEN_HEIGHT, 300],
-  });
-  const glowRadius = stage.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 150],
+    outputRange: [6, 1],
   });
   const glowOpacity = stage.interpolate({
     inputRange: [0, 1],
@@ -158,16 +158,11 @@ export default function CommandCenter() {
             styles.glow,
             {
               backgroundColor: getGlowColor(),
-              top: glowTop,
-              left: glowLeft,
-              width: glowWidth,
-              height: glowHeight,
-              borderRadius: glowRadius,
               opacity: glowOpacity,
+              transform: [{ scale: Animated.multiply(glowScale, breathe) }],
             },
           ]}
         />
-
         {showGreeting && (
           <Animated.Text
             style={[styles.greetingText, { opacity: greetingTextOpacity }]}
@@ -212,5 +207,10 @@ const styles = StyleSheet.create({
   },
   glow: {
     position: "absolute",
+    top: -100,
+    left: -80,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
   },
 });
