@@ -54,13 +54,14 @@ const styles = StyleSheet.create({
   cardLabel: {
     color: "#7C6FE0",
     fontSize: 12,
-    fontFamily: "monospace",
+    fontFamily: "JetBrainsMono_400Regular",
     letterSpacing: 1,
     marginBottom: 10,
   },
   noteInput: {
     color: "#FFFFFF",
     fontSize: 16,
+    fontFamily: "Inter_400Regular",
     minHeight: 60,
   },
 });

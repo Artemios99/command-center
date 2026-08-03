@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   cardLabel: {
     color: "#7C6FE0",
     fontSize: 12,
-    fontFamily: "monospace",
+    fontFamily: "JetBrainsMono_400Regular",
     letterSpacing: 1,
     marginBottom: 10,
   },
@@ -95,15 +95,17 @@ const styles = StyleSheet.create({
   temperature: {
     color: "#FFFFFF",
     fontSize: 36,
-    fontWeight: "700",
+    fontFamily: "JetBrainsMono_700Bold",
   },
   weatherLabel: {
     color: "#9098A9",
     fontSize: 14,
+    fontFamily: "Inter_400Regular",
   },
   errorText: {
     color: "#EF6E6E",
     fontSize: 13,
+    fontFamily: "Inter_400Regular",
     marginTop: 4,
   },
 });

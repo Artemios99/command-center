@@ -32,12 +32,12 @@ const styles = StyleSheet.create({
   greeting: {
     color: "#9098A9",
     fontSize: 15,
-    fontFamily: "monospace",
+    fontFamily: "JetBrainsMono_400Regular",
   },
   time: {
     color: "#FFFFFF",
     fontSize: 42,
-    fontWeight: "700",
+    fontFamily: "JetBrainsMono_700Bold",
     marginTop: 4,
   },
 });

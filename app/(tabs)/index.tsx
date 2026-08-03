@@ -1,6 +1,14 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { Inter_400Regular, Inter_600SemiBold } from "@expo-google-fonts/inter";
 import {
+  JetBrainsMono_400Regular,
+  JetBrainsMono_700Bold,
+  useFonts,
+} from "@expo-google-fonts/jetbrains-mono";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useRef, useState } from "react";
+import {
+  Animated,
   Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -15,6 +23,15 @@ import WeatherWidget from "../../components/WeatherWidget";
 export default function CommandCenter() {
   const [token, setToken] = useState<string | null>(null);
   const [checkingStorage, setCheckingStorage] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
+
+  const [fontsLoaded] = useFonts({
+    JetBrainsMono_700Bold,
+    JetBrainsMono_400Regular,
+    Inter_400Regular,
+    Inter_600SemiBold,
+  });
 
   useEffect(() => {
     AsyncStorage.getItem("token").then((storedToken) => {
@@ -23,12 +40,29 @@ export default function CommandCenter() {
     });
   }, []);
 
+  useEffect(() => {
+    if (token && fontsLoaded) {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [token, fontsLoaded]);
+
   const handleLogin = async (newToken: string) => {
     await AsyncStorage.setItem("token", newToken);
     setToken(newToken);
   };
 
-  if (checkingStorage) {
+  if (checkingStorage || !fontsLoaded) {
     return <View style={styles.container} />;
   }
 
@@ -38,13 +72,23 @@ export default function CommandCenter() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <LinearGradient
+        colors={["#0B0D14", "#14101F", "#0B0D14"]}
+        style={styles.container}
+      >
         <View style={styles.glow} />
-        <ClockHeader />
-        <WeatherWidget />
-        <NoteWidget token={token} />
-        <CounterWidget token={token} />
-      </View>
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          }}
+        >
+          <ClockHeader />
+          <WeatherWidget />
+          <NoteWidget token={token} />
+          <CounterWidget token={token} />
+        </Animated.View>
+      </LinearGradient>
     </TouchableWithoutFeedback>
   );
 }
@@ -52,7 +96,6 @@ export default function CommandCenter() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0B0D14",
     paddingTop: 70,
     paddingHorizontal: 20,
   },

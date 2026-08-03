@@ -1,4 +1,5 @@
 import { BlurView } from "expo-blur";
+import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -16,6 +17,7 @@ export default function CounterWidget({ token }: { token: string }) {
   }, []);
 
   const updateCount = (newCount: number) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCount(newCount);
     fetch(`${API_URL}/habits/coffee`, {
       method: "POST",
@@ -42,12 +44,14 @@ export default function CounterWidget({ token }: { token: string }) {
         <TouchableOpacity
           style={styles.counterButton}
           onPress={() => updateCount(Math.max(0, count - 1))}
+          activeOpacity={0.6}
         >
           <Text style={styles.counterButtonText}>−</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.counterButton, styles.counterButtonPrimary]}
           onPress={() => updateCount(count + 1)}
+          activeOpacity={0.6}
         >
           <Text style={styles.counterButtonText}>+</Text>
         </TouchableOpacity>
@@ -68,7 +72,7 @@ const styles = StyleSheet.create({
   cardLabel: {
     color: "#7C6FE0",
     fontSize: 12,
-    fontFamily: "monospace",
+    fontFamily: "JetBrainsMono_400Regular",
     letterSpacing: 1,
     marginBottom: 10,
   },
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
   counterValue: {
     color: "#FFFFFF",
     fontSize: 36,
-    fontWeight: "700",
+    fontFamily: "JetBrainsMono_700Bold",
   },
   counterButtons: {
     flexDirection: "row",
@@ -100,6 +104,6 @@ const styles = StyleSheet.create({
   counterButtonText: {
     color: "#FFFFFF",
     fontSize: 22,
-    fontWeight: "700",
+    fontFamily: "JetBrainsMono_700Bold",
   },
 });
