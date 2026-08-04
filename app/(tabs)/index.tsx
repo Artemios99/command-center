@@ -11,15 +11,18 @@ import {
   Animated,
   Dimensions,
   Keyboard,
+  ScrollView,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
+import BatteryWidget from "../../components/BatteryWidget";
 import ClockHeader from "../../components/ClockHeader";
 import CounterWidget from "../../components/CounterWidget";
 import LoginScreen from "../../components/LoginScreen";
+import MiniCalendarWidget from "../../components/MiniCalendarWidget";
 import NoteWidget from "../../components/NoteWidget";
+import QRCodeWidget from "../../components/QRCodeWidget";
 import WavingCharacter from "../../components/WavingCharacter";
 import WeatherWidget from "../../components/WeatherWidget";
 
@@ -150,45 +153,55 @@ export default function CommandCenter() {
   });
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <LinearGradient
-        colors={["#0B0D14", "#14101F", "#0B0D14"]}
-        style={styles.container}
-      >
+    <LinearGradient
+      colors={["#0B0D14", "#14101F", "#0B0D14"]}
+      style={styles.container}
+    >
+      <Animated.View
+        style={[
+          styles.glow,
+          {
+            backgroundColor: getGlowColor(),
+            opacity: glowOpacity,
+            transform: [{ scale: Animated.multiply(glowScale, breathe) }],
+          },
+        ]}
+      />
+      {showGreeting && (
         <Animated.View
-          style={[
-            styles.glow,
-            {
-              backgroundColor: getGlowColor(),
-              opacity: glowOpacity,
-              transform: [{ scale: Animated.multiply(glowScale, breathe) }],
-            },
-          ]}
-        />
-        {showGreeting && (
-          <Animated.View
-            style={[styles.greetingWrapper, { opacity: greetingTextOpacity }]}
-          >
-            <WavingCharacter />
-            <Text style={styles.greetingText}>{getGreeting()}, Artemios</Text>
-          </Animated.View>
-        )}
+          style={[styles.greetingWrapper, { opacity: greetingTextOpacity }]}
+        >
+          <WavingCharacter />
+          <Text style={styles.greetingText}>{getGreeting()}, Artemios</Text>
+        </Animated.View>
+      )}
 
-        {!showGreeting && (
-          <Animated.View
-            style={{
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            }}
+      {!showGreeting && (
+        <Animated.View
+          style={{
+            flex: 1,
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          }}
+        >
+          <ScrollView
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            onScrollBeginDrag={Keyboard.dismiss}
           >
             <ClockHeader />
             <WeatherWidget />
+            <MiniCalendarWidget />
+            <BatteryWidget />
+            <QRCodeWidget />
             <NoteWidget token={token} />
             <CounterWidget token={token} />
-          </Animated.View>
-        )}
-      </LinearGradient>
-    </TouchableWithoutFeedback>
+          </ScrollView>
+        </Animated.View>
+      )}
+    </LinearGradient>
   );
 }
 
@@ -225,5 +238,8 @@ const styles = StyleSheet.create({
     width: 220,
     height: 100,
     alignSelf: "center",
+  },
+  scrollContent: {
+    paddingBottom: 40,
   },
 });
