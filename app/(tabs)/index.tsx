@@ -12,6 +12,7 @@ import {
   Dimensions,
   Keyboard,
   StyleSheet,
+  Text,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -19,6 +20,7 @@ import ClockHeader from "../../components/ClockHeader";
 import CounterWidget from "../../components/CounterWidget";
 import LoginScreen from "../../components/LoginScreen";
 import NoteWidget from "../../components/NoteWidget";
+import WavingCharacter from "../../components/WavingCharacter";
 import WeatherWidget from "../../components/WeatherWidget";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -87,7 +89,7 @@ export default function CommandCenter() {
           duration: 300,
           useNativeDriver: true,
         }).start();
-      }, 1600);
+      }, 4000);
 
       return () => clearTimeout(timer);
     }
@@ -164,11 +166,12 @@ export default function CommandCenter() {
           ]}
         />
         {showGreeting && (
-          <Animated.Text
-            style={[styles.greetingText, { opacity: greetingTextOpacity }]}
+          <Animated.View
+            style={[styles.greetingWrapper, { opacity: greetingTextOpacity }]}
           >
-            {getGreeting()}, Artemios
-          </Animated.Text>
+            <WavingCharacter />
+            <Text style={styles.greetingText}>{getGreeting()}, Artemios</Text>
+          </Animated.View>
         )}
 
         {!showGreeting && (
@@ -196,14 +199,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   greetingText: {
-    position: "absolute",
-    top: "45%",
-    left: 20,
-    right: 20,
     textAlign: "center",
     color: "#FFFFFF",
     fontSize: 28,
     fontFamily: "JetBrainsMono_700Bold",
+    marginTop: 12,
   },
   glow: {
     position: "absolute",
@@ -212,5 +212,12 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     borderRadius: 150,
+  },
+  greetingWrapper: {
+    position: "absolute",
+    top: "28%",
+    left: 20,
+    right: 20,
+    alignItems: "center",
   },
 });
