@@ -7,7 +7,8 @@ export default function WavingCharacter() {
       source={require("../assets/animations/Welcome.json")}
       autoPlay
       loop
-      speed={2}
+      speed={1}
+      resizeMode="contain"
       style={styles.animation}
     />
   );
@@ -15,12 +16,8 @@ export default function WavingCharacter() {
 
 const styles = StyleSheet.create({
   animation: {
-    width: 140,
-    height: 140,
-    position: "absolute",
-    top: "28%",
-    left: 0,
-    right: 0,
+    width: 300,
+    height: 200,
     alignSelf: "center",
   },
 });

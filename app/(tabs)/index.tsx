@@ -89,7 +89,7 @@ export default function CommandCenter() {
           duration: 300,
           useNativeDriver: true,
         }).start();
-      }, 4000);
+      }, 5500);
 
       return () => clearTimeout(timer);
     }
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   greetingText: {
     textAlign: "center",
     color: "#FFFFFF",
-    fontSize: 28,
+    fontSize: 30,
     fontFamily: "JetBrainsMono_700Bold",
     marginTop: 12,
   },
@@ -219,5 +219,11 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     alignItems: "center",
+  },
+
+  animation: {
+    width: 220,
+    height: 100,
+    alignSelf: "center",
   },
 });
