@@ -161,9 +161,20 @@ export default function MiniCalendarWidget({ token }: { token: string }) {
       <TouchableOpacity onPress={openWidget} activeOpacity={0.8}>
         <BlurView intensity={40} tint="dark" style={styles.card}>
           <Text style={styles.weekday}>{WEEKDAYS[today.getDay()]}</Text>
-          <Text style={styles.dayNumber}>{today.getDate()}</Text>
+          <View
+            style={[
+              styles.dayNumberWrapper,
+              todayHasEvent && styles.dayNumberWrapperActive,
+            ]}
+          >
+            <Text style={styles.dayNumber}>{today.getDate()}</Text>
+          </View>
           <Text style={styles.month}>{MONTHS_SHORT[today.getMonth()]}</Text>
-          {todayHasEvent && <View style={styles.badge} />}
+          {todayHasEvent && (
+            <View style={styles.eventPill}>
+              <Text style={styles.eventPillText}>●</Text>
+            </View>
+          )}
         </BlurView>
       </TouchableOpacity>
 
@@ -301,25 +312,33 @@ const styles = StyleSheet.create({
     fontFamily: "JetBrainsMono_400Regular",
     letterSpacing: 0.5,
   },
+  dayNumberWrapper: {
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 12,
+    marginVertical: 2,
+  },
+  dayNumberWrapperActive: {
+    backgroundColor: "rgba(224,111,158,0.18)",
+    borderWidth: 1.5,
+    borderColor: "#E06F9E",
+  },
   dayNumber: {
     color: "#FFFFFF",
     fontSize: 30,
     fontFamily: "JetBrainsMono_700Bold",
-    marginVertical: 2,
   },
   month: {
     color: "#9098A9",
     fontSize: 12,
     fontFamily: "Inter_400Regular",
   },
-  badge: {
-    position: "absolute",
-    top: 8,
-    right: 8,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#E06F9E",
+  eventPill: {
+    marginTop: 4,
+  },
+  eventPillText: {
+    color: "#E06F9E",
+    fontSize: 8,
   },
   modalOverlay: {
     flex: 1,

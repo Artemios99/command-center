@@ -39,6 +39,15 @@ function getGlowColor() {
   return "#4A5FE0";
 }
 
+function getBackgroundGradient(): [string, string, string] {
+  const hour = new Date().getHours();
+  if (hour < 6) return ["#0B0D14", "#0F1220", "#0B0D14"];
+  if (hour < 12) return ["#14100A", "#1A140D", "#0B0D14"];
+  if (hour < 18) return ["#0B0D14", "#14101F", "#0B0D14"];
+  if (hour < 22) return ["#150A12", "#1A0D16", "#0B0D14"];
+  return ["#0B0D14", "#0F1220", "#0B0D14"];
+}
+
 function getGreeting() {
   const hour = new Date().getHours();
   if (hour < 6) return "Καλό βράδυ";
@@ -142,10 +151,7 @@ export default function CommandCenter() {
   });
 
   return (
-    <LinearGradient
-      colors={["#0B0D14", "#14101F", "#0B0D14"]}
-      style={styles.container}
-    >
+    <LinearGradient colors={getBackgroundGradient()} style={styles.container}>
       <Animated.View
         style={[
           styles.glow,
