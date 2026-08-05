@@ -169,12 +169,11 @@ export default function WeatherWidget() {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 16,
+    padding: 14,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
-    marginBottom: 16,
   },
   cardLabel: {
     color: "#7C6FE0",
@@ -189,16 +188,16 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   icon: {
-    fontSize: 40,
+    fontSize: 28,
   },
   temperature: {
     color: "#FFFFFF",
-    fontSize: 32,
+    fontSize: 24,
     fontFamily: "JetBrainsMono_700Bold",
   },
   weatherLabel: {
     color: "#9098A9",
-    fontSize: 14,
+    fontSize: 11,
     fontFamily: "Inter_400Regular",
   },
   errorText: {

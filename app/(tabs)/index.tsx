@@ -92,7 +92,7 @@ export default function CommandCenter() {
           duration: 300,
           useNativeDriver: true,
         }).start();
-      }, 5500);
+      }, 4500);
 
       return () => clearTimeout(timer);
     }
@@ -192,9 +192,17 @@ export default function CommandCenter() {
             onScrollBeginDrag={Keyboard.dismiss}
           >
             <ClockHeader />
-            <WeatherWidget />
-            <MiniCalendarWidget />
-            <BatteryWidget />
+
+            <View style={styles.row}>
+              <View style={styles.halfWidth}>
+                <WeatherWidget />
+              </View>
+              <View style={styles.halfWidth}>
+                <BatteryWidget />
+              </View>
+            </View>
+
+            <MiniCalendarWidget token={token} />
             <QRCodeWidget />
             <NoteWidget token={token} />
             <CounterWidget token={token} />
@@ -241,5 +249,14 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 40,
+  },
+
+  row: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 16,
+  },
+  halfWidth: {
+    flex: 1,
   },
 });

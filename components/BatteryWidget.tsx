@@ -50,12 +50,11 @@ export default function BatteryWidget() {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 16,
+    padding: 14,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
-    marginBottom: 16,
   },
   cardLabel: {
     color: "#7C6FE0",
@@ -83,9 +82,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   percentage: {
-    fontSize: 18,
+    fontSize: 15,
     fontFamily: "JetBrainsMono_700Bold",
-    minWidth: 50,
+    minWidth: 40,
     textAlign: "right",
   },
 });

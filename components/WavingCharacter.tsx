@@ -7,7 +7,7 @@ export default function WavingCharacter() {
       source={require("../assets/animations/Welcome.json")}
       autoPlay
       loop
-      speed={1}
+      speed={1.5}
       resizeMode="contain"
       style={styles.animation}
     />
