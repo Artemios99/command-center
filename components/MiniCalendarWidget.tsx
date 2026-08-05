@@ -286,13 +286,14 @@ export default function MiniCalendarWidget({ token }: { token: string }) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: 20,
+    padding: 16,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: "rgba(124,111,224,0.25)",
+    backgroundColor: "rgba(124,111,224,0.06)",
     alignItems: "center",
-    width: 90,
+    width: "100%",
   },
   weekday: {
     color: "#7C6FE0",

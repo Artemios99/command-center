@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import * as Battery from "expo-battery";
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
@@ -30,19 +31,20 @@ export default function BatteryWidget() {
 
   return (
     <BlurView intensity={40} tint="dark" style={styles.card}>
-      <Text style={styles.cardLabel}>ΜΠΑΤΑΡΙΑ</Text>
-      <View style={styles.row}>
-        <View style={styles.batteryShape}>
-          <View
-            style={[
-              styles.batteryFill,
-              { width: `${level ?? 0}%`, backgroundColor: getColor() },
-            ]}
-          />
-        </View>
-        <Text style={[styles.percentage, { color: getColor() }]}>
-          {level ?? "--"}%
-        </Text>
+      <View style={styles.headerRow}>
+        <Feather name="battery-charging" size={16} color={getColor()} />
+        <Text style={[styles.cardLabel, { color: getColor() }]}>ΜΠΑΤΑΡΙΑ</Text>
+      </View>
+      <Text style={[styles.percentage, { color: getColor() }]}>
+        {level ?? "--"}%
+      </Text>
+      <View style={styles.batteryShape}>
+        <View
+          style={[
+            styles.batteryFill,
+            { width: `${level ?? 0}%`, backgroundColor: getColor() },
+          ]}
+        />
       </View>
     </BlurView>
   );
@@ -50,41 +52,37 @@ export default function BatteryWidget() {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: 20,
+    padding: 16,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: "rgba(98,199,118,0.25)",
+    backgroundColor: "rgba(98,199,118,0.06)",
   },
-  cardLabel: {
-    color: "#7C6FE0",
-    fontSize: 12,
-    fontFamily: "JetBrainsMono_400Regular",
-    letterSpacing: 1,
-    marginBottom: 10,
-  },
-  row: {
+  headerRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: 6,
+    marginBottom: 8,
+  },
+  cardLabel: {
+    fontSize: 11,
+    fontFamily: "JetBrainsMono_400Regular",
+    letterSpacing: 1,
+  },
+  percentage: {
+    fontSize: 26,
+    fontFamily: "JetBrainsMono_700Bold",
+    marginBottom: 8,
   },
   batteryShape: {
-    flex: 1,
-    height: 24,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: "rgba(255,255,255,0.2)",
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "rgba(255,255,255,0.08)",
     overflow: "hidden",
-    padding: 2,
   },
   batteryFill: {
     height: "100%",
-    borderRadius: 3,
-  },
-  percentage: {
-    fontSize: 15,
-    fontFamily: "JetBrainsMono_700Bold",
-    minWidth: 40,
-    textAlign: "right",
+    borderRadius: 4,
   },
 });

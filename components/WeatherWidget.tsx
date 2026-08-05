@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
 import {
@@ -102,8 +103,10 @@ export default function WeatherWidget() {
         activeOpacity={0.8}
       >
         <BlurView intensity={40} tint="dark" style={styles.card}>
-          <Text style={styles.cardLabel}>ΚΑΙΡΟΣ ΤΩΡΑ</Text>
-
+          <View style={styles.headerRow}>
+            <Feather name="sun" size={16} color="#F0A868" />
+            <Text style={styles.cardLabel}>ΚΑΙΡΟΣ ΤΩΡΑ</Text>
+          </View>
           {loading ? (
             <ActivityIndicator color="#7C6FE0" style={{ marginTop: 8 }} />
           ) : errorMsg ? (
@@ -169,31 +172,38 @@ export default function WeatherWidget() {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: 20,
+    padding: 18,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: "rgba(240,168,104,0.25)",
+    backgroundColor: "rgba(240,168,104,0.06)",
   },
   cardLabel: {
-    color: "#7C6FE0",
+    color: "#F0A868",
     fontSize: 12,
     fontFamily: "JetBrainsMono_400Regular",
     letterSpacing: 1,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
     marginBottom: 10,
   },
+  icon: {
+    fontSize: 42,
+  },
+  temperature: {
+    color: "#FFFFFF",
+    fontSize: 30,
+    fontFamily: "JetBrainsMono_700Bold",
+  },
+
   weatherRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
-  },
-  icon: {
-    fontSize: 28,
-  },
-  temperature: {
-    color: "#FFFFFF",
-    fontSize: 24,
-    fontFamily: "JetBrainsMono_700Bold",
   },
   weatherLabel: {
     color: "#9098A9",

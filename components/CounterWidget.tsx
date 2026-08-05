@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
 import { useEffect, useRef, useState } from "react";
@@ -59,7 +60,10 @@ export default function CounterWidget({ token }: { token: string }) {
       style={[styles.card, styles.counterCard]}
     >
       <View>
-        <Text style={styles.cardLabel}>ΚΑΦΕΔΕΣ ΣΗΜΕΡΑ</Text>
+        <View style={styles.headerRow}>
+          <Feather name="coffee" size={16} color="#E06F9E" />
+          <Text style={styles.cardLabel}>ΚΑΦΕΔΕΣ ΣΗΜΕΡΑ</Text>
+        </View>
         <Animated.Text
           style={[styles.counterValue, { transform: [{ scale: scaleAnim }] }]}
         >
@@ -90,23 +94,28 @@ export default function CounterWidget({ token }: { token: string }) {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 20,
-    padding: 20,
+    padding: 16,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
-    marginBottom: 16,
+    borderColor: "rgba(224,111,158,0.25)",
+    backgroundColor: "rgba(224,111,158,0.06)",
   },
   cardLabel: {
-    color: "#7C6FE0",
-    fontSize: 12,
+    color: "#E06F9E",
+    fontSize: 11,
     fontFamily: "JetBrainsMono_400Regular",
     letterSpacing: 1,
-    marginBottom: 10,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 6,
   },
   counterCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: 10,
   },
   counterValue: {
     color: "#FFFFFF",

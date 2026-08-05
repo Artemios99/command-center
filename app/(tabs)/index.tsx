@@ -22,7 +22,9 @@ import CounterWidget from "../../components/CounterWidget";
 import LoginScreen from "../../components/LoginScreen";
 import MiniCalendarWidget from "../../components/MiniCalendarWidget";
 import NoteWidget from "../../components/NoteWidget";
+import useNotificationSetup from "../../components/NotificationSetup";
 import QRCodeWidget from "../../components/QRCodeWidget";
+import StaggeredItem from "../../components/StaggeredItem";
 import WavingCharacter from "../../components/WavingCharacter";
 import WeatherWidget from "../../components/WeatherWidget";
 
@@ -52,8 +54,6 @@ export default function CommandCenter() {
 
   const greetingTextOpacity = useRef(new Animated.Value(0)).current;
   const stage = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(20)).current;
   const breathe = useRef(new Animated.Value(1)).current;
 
   const [fontsLoaded] = useFonts({
@@ -62,6 +62,8 @@ export default function CommandCenter() {
     Inter_400Regular,
     Inter_600SemiBold,
   });
+
+  useNotificationSetup(token);
 
   useEffect(() => {
     AsyncStorage.getItem("token").then((storedToken) => {
@@ -100,19 +102,6 @@ export default function CommandCenter() {
 
   useEffect(() => {
     if (!showGreeting) {
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-      ]).start();
-
       Animated.loop(
         Animated.sequence([
           Animated.timing(breathe, {
@@ -177,37 +166,50 @@ export default function CommandCenter() {
       )}
 
       {!showGreeting && (
-        <Animated.View
-          style={{
-            flex: 1,
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          }}
+        <ScrollView
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          onScrollBeginDrag={Keyboard.dismiss}
         >
-          <ScrollView
-            style={{ flex: 1 }}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
-            onScrollBeginDrag={Keyboard.dismiss}
-          >
+          <StaggeredItem delay={0}>
             <ClockHeader />
+          </StaggeredItem>
 
-            <View style={styles.row}>
-              <View style={styles.halfWidth}>
+          <View style={styles.bentoRow}>
+            <View style={styles.bentoLarge}>
+              <StaggeredItem delay={150}>
                 <WeatherWidget />
-              </View>
-              <View style={styles.halfWidth}>
-                <BatteryWidget />
-              </View>
+              </StaggeredItem>
             </View>
+            <View style={styles.bentoColumn}>
+              <StaggeredItem delay={250}>
+                <MiniCalendarWidget token={token} />
+              </StaggeredItem>
+              <StaggeredItem delay={350}>
+                <BatteryWidget />
+              </StaggeredItem>
+            </View>
+          </View>
 
-            <MiniCalendarWidget token={token} />
-            <QRCodeWidget />
+          <StaggeredItem delay={450}>
             <NoteWidget token={token} />
-            <CounterWidget token={token} />
-          </ScrollView>
-        </Animated.View>
+          </StaggeredItem>
+
+          <View style={styles.bentoRow}>
+            <View style={styles.bentoSmall}>
+              <StaggeredItem delay={550}>
+                <CounterWidget token={token} />
+              </StaggeredItem>
+            </View>
+            <View style={styles.bentoSmall}>
+              <StaggeredItem delay={650}>
+                <QRCodeWidget />
+              </StaggeredItem>
+            </View>
+          </View>
+        </ScrollView>
       )}
     </LinearGradient>
   );
@@ -241,7 +243,6 @@ const styles = StyleSheet.create({
     right: 20,
     alignItems: "center",
   },
-
   animation: {
     width: 220,
     height: 100,
@@ -250,13 +251,20 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 40,
   },
-
-  row: {
+  bentoRow: {
     flexDirection: "row",
     gap: 12,
-    marginBottom: 16,
+    marginBottom: 12,
+    alignItems: "flex-start",
   },
-  halfWidth: {
+  bentoLarge: {
+    flex: 1.4,
+  },
+  bentoColumn: {
+    flex: 1,
+    gap: 12,
+  },
+  bentoSmall: {
     flex: 1,
   },
 });

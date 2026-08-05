@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
@@ -8,7 +9,10 @@ export default function QRCodeWidget() {
 
   return (
     <BlurView intensity={40} tint="dark" style={styles.card}>
-      <Text style={styles.cardLabel}>QR CODE</Text>
+      <View style={styles.headerRow}>
+        <Feather name="grid" size={16} color="#7C6FE0" />
+        <Text style={styles.cardLabel}>QR CODE</Text>
+      </View>
 
       <TextInput
         style={styles.input}
@@ -35,19 +39,24 @@ export default function QRCodeWidget() {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 20,
-    padding: 20,
+    padding: 16,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
-    marginBottom: 16,
+    borderColor: "rgba(124,111,224,0.25)",
+    backgroundColor: "rgba(124,111,224,0.06)",
     alignItems: "center",
   },
   cardLabel: {
     color: "#7C6FE0",
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: "JetBrainsMono_400Regular",
     letterSpacing: 1,
-    marginBottom: 10,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 8,
     alignSelf: "flex-start",
   },
   input: {
